@@ -7,5 +7,13 @@ use Illuminate\Routing\Controller;
 
 class MainController extends Controller
 {
-    //
+    public function index()
+    {
+        return view('/home');
+    }
+
+    public function newCrise()
+    {
+        echo 'newCrise';
+    }
 }

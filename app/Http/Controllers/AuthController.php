@@ -61,12 +61,12 @@ class AuthController extends Controller
             ]
         ]);
 
-        echo 'Login realizado com sucesso!';
+        return redirect()->to('/');
 
     }
     public function logout()
     {
-        session()->forget('uemail');
+        session()->forget('user');
         return redirect()->to('/login');
     }
 }
