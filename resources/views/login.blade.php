@@ -6,7 +6,7 @@
         <div class="col-md-6 col-sm-8">
                 <!-- logo -->
                 <div class="text-center p-3">
-                    <img class="logo" src="img/emblema_médico.png" alt="Logo LSC" width="200px">
+                    <img class="logo" src="img/emblema_médico.png" alt="Logo LSC" width="100px">
                 </div>
             <div class="card p-5">
                 <!-- form -->

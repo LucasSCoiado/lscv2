@@ -17,12 +17,12 @@
         @else
 
             <div class="d-flex justify-content-end mb-3">
-                <a href="{{ route('new') }}" class="btn btn-secondary px-3">
+                <a href="{{ route('create') }}" class="btn btn-secondary px-3">
                     <i class="fa-regular fa-pen-to-square me-2"></i>Cadastrar eplepsia
                 </a>
             </div>
             @foreach ($crises as $crise)
-                @include('crises');
+                @include('crises')
             @endforeach
         @endif
     </div>

@@ -13,6 +13,16 @@ Route::middleware([UserNotLogged::class])->group(function(){
 
 Route::middleware([UserLogged::class])->group(function () {
     Route::get('/', [MainController::class, 'index'])->name('home');
-    Route::get('/newCrise', [MainController::class, 'newCrise'])->name('new');
+    
+    //create
+    Route::get('/create', [MainController::class, 'create'])->name('create');
+    Route::post('/store', [MainController::class, 'store'])->name('store');
+
+    //edit
+    Route::get('/edit/{id}', [MainController::class, 'edit'])->name('edit');
+    
+    //Delete
+    Route::get('/delete/{id}', [MainController::class, 'delete'])->name('delete');
+
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });
