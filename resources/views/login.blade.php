@@ -41,9 +41,7 @@
                             </div>
                         @endif
                 </div>
-                <footer class="text-center text-secondary mt-3">
-                    <small>&copy; <?= date('Y') ?> LSC1</small>
-                </footer>
+
             </div>
         </div>
     </div>

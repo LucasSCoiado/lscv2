@@ -20,7 +20,8 @@ Route::middleware([UserLogged::class])->group(function () {
 
     //edit
     Route::get('/edit/{id}', [MainController::class, 'edit'])->name('edit');
-    
+    Route::post('/update', [MainController::class, 'update'])->name('update');
+
     //Delete
     Route::get('/delete/{id}', [MainController::class, 'delete'])->name('delete');
 

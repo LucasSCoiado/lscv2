@@ -15,6 +15,10 @@
     <div class="container">
         <div class="row justify-content-center">    
             @yield('content')
+
+            <footer class="text-center text-secondary mt-3">
+                <small>&copy; <?= date('Y') ?> LSC1</small>
+            </footer>
         </div>
     </div>
 </body>

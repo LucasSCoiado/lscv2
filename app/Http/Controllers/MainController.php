@@ -28,6 +28,41 @@ class MainController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request);
+        
+        CrisesService::store($request, session('user.id'));
+
+        return redirect()->route('home');
+    }
+
+    public function edit($id)
+    {
+        $id = Operations::decrypt($id);
+        
+        $crise = Crise::FindOrFail($id);
+
+        return view('update', [
+            'crise' => $crise,
+        ]);
+    }
+
+    public function update(Request $request)
+    {
+        $this->validate($request);
+
+        CrisesService::update($request);
+
+        return redirect()->route('home');
+    }
+
+    public function delete($id)
+    {
+        $id = Operations::decrypt($id);
+        echo "Deletando o $id";
+    }
+
+    private function validate(Request $request)
+    {
         $request->validate(
     [
                 'txt_tipo' => 'required|min:3|max:255',
@@ -46,22 +81,6 @@ class MainController extends Controller
                 'txt_tempo.max' => 'O tempo deve ter no máximo :max caractéres'
             ]
         );
-        
-        CrisesService::createCrise($request, session('user.id'));
-
-        return redirect()->route('home');
-    }
-
-    public function edit($id)
-    {
-        $id = Operations::decrypt($id);
-        echo "Editando o $id";
-    }
-
-    public function delete($id)
-    {
-        $id = Operations::decrypt($id);
-        echo "Deletando o $id";
     }
 
 }

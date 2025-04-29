@@ -21,6 +21,7 @@
                     <i class="fa-regular fa-pen-to-square me-2"></i>Cadastrar eplepsia
                 </a>
             </div>
+            <h3 class="text-center text-secondary">Crises</h3>
             @foreach ($crises as $crise)
                 @include('crises')
             @endforeach

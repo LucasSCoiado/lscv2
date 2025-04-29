@@ -8,21 +8,34 @@ use Illuminate\Http\Request;
 
 class CrisesService
 {
-    public function getCrisesByUserId($userId)
+    public static function store($request, $userId)
     {
-        return User::find($userId)->notes()->get()->toArray();
-    }
-
-    public static function createCrise($request, $userId)
-    {
-        // Cria uma nova instância de Crise
         $crise = new Crise();
         $crise->tipo = $request->input('txt_tipo');
         $crise->data = $request->input('txt_data');
         $crise->tempo = $request->input('txt_tempo');
-        $crise->user_id = $userId; // Relaciona com o usuário logado
+        $crise->user_id = $userId;
         $crise->save();
 
-        return $crise; // Retorna a instância criada
+        return $crise;
+    }
+
+    public static function update(Request $request)
+    {
+
+        if($request->crise_id == null){
+            return redirect()->route('home');
+        }
+
+        $id = Operations::decrypt($request->crise_id);
+        
+        $crise = Crise::find($id);
+        
+        $crise->tipo = $request->txt_tipo;
+        $crise->data = $request->txt_data;
+        $crise->tempo = $request->txt_tempo;
+        $crise->save();
+
+        return $crise;
     }
 }
