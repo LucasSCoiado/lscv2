@@ -39,6 +39,10 @@ class MainController extends Controller
     {
         $id = Operations::decrypt($id);
         
+        if($id === null){
+            return redirect()->route('home');
+        }
+
         $crise = Crise::FindOrFail($id);
 
         return view('update', [
@@ -57,8 +61,38 @@ class MainController extends Controller
 
     public function delete($id)
     {
+        try {
+            $id = Operations::decrypt($id);
+
+            if($id === null){
+                return redirect()->route('home');
+            }
+
+            $crise = Crise::find($id);
+    
+            if (!$crise) {
+                return redirect()->route('home')->with('error', 'Crise não encontrada.');
+            }
+    
+            return view('delete', [
+                'crises' => $crise,
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->route('home')->with('error', 'ID inválido.' .$e->getMessage());
+        }
+    }
+
+    public function destroy($id)
+    {
         $id = Operations::decrypt($id);
-        echo "Deletando o $id";
+
+        if($id === null){
+            return redirect()->route('home');
+        }
+
+        Crise::destroy($id);
+
+        return redirect()->route('home');
     }
 
     private function validate(Request $request)

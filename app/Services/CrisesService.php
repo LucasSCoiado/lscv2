@@ -29,6 +29,10 @@ class CrisesService
 
         $id = Operations::decrypt($request->crise_id);
         
+        if($id === null){
+            return redirect()->route('home');
+        }
+
         $crise = Crise::find($id);
         
         $crise->tipo = $request->txt_tipo;
