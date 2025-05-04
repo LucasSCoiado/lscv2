@@ -10,7 +10,7 @@
     <link rel="shortcut icon" href="{{asset('img/logo.jpg')}}" type="image/x-icon">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-primary-subtle">
+<body>
     <div class="container">
         <div class="row justify-content-center">    
             @yield('content')
