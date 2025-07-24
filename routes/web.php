@@ -3,11 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\UserLogged;
 use App\Http\Middleware\UserNotLogged;
 
 Route::middleware([UserNotLogged::class])->group(function(){
-    Route::get('/login', [AuthController::class, 'login']);
+    Route::get('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/loginSubmit', [AuthController::class, 'loginSubmit'])->name('loginSubmit');
 });
 
@@ -27,4 +28,9 @@ Route::middleware([UserLogged::class])->group(function () {
     Route::get('/destroy/{id}', [MainController::class, 'destroy'])->name('destroy');
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+});
+
+Route::group(['prefix'=>'user'], function(){
+    Route::get('/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/store', [UserController::class, 'store'])->name('user.store');
 });

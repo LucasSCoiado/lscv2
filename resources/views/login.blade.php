@@ -34,12 +34,16 @@
                             <button type="submit" class="btn btn-secondary w-100">LOGIN</button>
                         </div>
                     </form>
-                        {{-- ivalid login --}}
-                        @if (session('loginError'))
-                            <div class="alert alert-danger text-center">
-                                {{ session('loginError') }}
-                            </div>
-                        @endif
+                    {{-- ivalid login --}}
+                    @if (session('loginError'))
+                        <div class="alert alert-danger text-center">
+                            {{ session('loginError') }}
+                        </div>
+                    @endif
+                    <div class="d-flex justify-content-end align-items-center ml-3">
+                        <a href="{{ route('user.create') }}" class="btn btn-outline-secondary px-3 mx-1">Registrar</a>
+                        <a href="#" class="btn btn-outline-secondary px-3 mx-1">Esqueci minha senha</a>
+                    </div>
                 </div>
 
             </div>

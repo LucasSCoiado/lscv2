@@ -9,14 +9,15 @@
     <!-- Estilo -->
     <link rel="shortcut icon" href="{{asset('img/logo.jpg')}}" type="image/x-icon">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
+<body class="container-pai">
     <div class="container">
         <div class="row justify-content-center">    
             @yield('content')
 
             <footer class="text-center text-secondary mt-3">
-                <small>&copy; <?= date('Y') ?> LSC1</small>
+                <small>LSC1&copy;<?=date('Y') ?> </small>
             </footer>
         </div>
     </div>
