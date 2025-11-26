@@ -5,22 +5,22 @@
             @csrf
             <div class="form-group">
                 <label for="">Email</label>
-                <input type="email" name="txt_email" class="form-control" placeholder="Digite seu email" required>
-                @error('txt_email')
+                <input type="email" name="email" class="form-control" placeholder="Digite seu email" required>
+                @error('email')
                     <div class="text-danger">{{$message}}</div>
                 @enderror
             </div>
             <div class="form-group">
                 <label for="">Senha</label>
-                <input type="password" name="txt_password" class="form-control" placeholder="Digite sua senha" required>
-                @error('txt_password')
+                <input type="password" name="password" class="form-control" placeholder="Digite sua senha" required>
+                @error('password')
                     <div class="text-danger">{{$message}}</div>
                 @enderror
             </div>
             <div class="form-group">
                 <label for="">Confirme a senha</label>
-                <input type="password" name="txt_password_confirmation" class="form-control" placeholder="Confirme sua senha" required>
-                @error('txt_password_confirmation')
+                <input type="password" name="password_confirmation" class="form-control" placeholder="Confirme sua senha" required>
+                @error('password_confirmation')
                     <div class="text-danger">{{$message}}</div>
                 @enderror
             </div>

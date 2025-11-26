@@ -2,10 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ConfirmAccountController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\UserLogged;
 use App\Http\Middleware\UserNotLogged;
+
+Route::middleware('guest')->group(function(): void{
+    Route::get('/confirm-account/{token}', [ConfirmAccountController::class, 'confirmAccount'])->name('confirm-account');
+    Route::get('/new_user_confirmation/{token}', [UserController::class, 'new_user_confirm'])->name('new_user_confirmation');
+    Route::post('/confirm-account', [ConfirmAccountController::class, 'confirmAcountSubmit'])->name('confirm-account-submit');
+    Route::get('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
+});
 
 Route::middleware([UserNotLogged::class])->group(function(){
     Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -28,6 +36,7 @@ Route::middleware([UserLogged::class])->group(function () {
     Route::get('/destroy/{id}', [MainController::class, 'destroy'])->name('destroy');
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    
 });
 
 Route::group(['prefix'=>'user'], function(){

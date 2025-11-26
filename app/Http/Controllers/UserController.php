@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ConfirmAccountEmail;
+use App\Mail\NewUserConfirmation;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -17,9 +21,8 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-                'txt_name' => 'required|min:3|max:50',
-                'txt_email' => 'required|email|max:100',
-                'txt_password' => 'required|min:6|max:20|confirmed',
+                'email' => 'required|email|max:100',
+                'password' => 'required|min:6|max:20|confirmed',
             ],
             [
                 'txt_name.required' => 'O nome é obrigatório.',
@@ -38,10 +41,44 @@ class UserController extends Controller
             ]
         );
         $user = new User();
-        $user->email = $request->input('txt_email');
-        $user->password = bcrypt($request->input('txt_password'));
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->token = Str::random(60);
+
+        // salva primeiro para garantir que o token exista no BD
         $user->save();
 
-        return redirect()->route('login');
+        // usa o token do usuário (não uma variável indefinida)
+        $token = $user->token;
+        $confirmation_link = route('new_user_confirmation', ['token' => $token]);
+
+        try {
+            Mail::to($user->email)->send(new NewUserConfirmation($user->email, $confirmation_link));
+        } catch (\Exception $e) {
+            // opcional: remover usuário salvo se falhar o envio
+            $user->delete();
+            return back()->withInput()->with([
+                'server_error' => 'Ocorreu um erro no envio do email de confirmação: ' . $e->getMessage()
+            ]);
+        }
+
+        return view('auth.email_sent', ['email' => $user->email]);
+    }
+
+    public function new_user_confirm($token)
+    {
+        $user = User::where('token', $token)->first();
+
+        if (!$user) {
+            return redirect()->route('login')->with([
+                'error' => 'Token inválido ou expirado.'
+            ]);
+        }
+
+        $user->is_confirmed = true;
+        $user->token = null;
+        $user->save();
+
+        return view('auth.new_user_confirmation');
     }
 }

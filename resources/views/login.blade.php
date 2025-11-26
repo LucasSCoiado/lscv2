@@ -12,7 +12,7 @@
                 <!-- form -->
                 <div class="row justify-content-center">
                     <h2 class="text-center">Login</h2>
-                    <form action="/loginSubmit" method="POST" novalidate>
+                    <form action="{{route('loginSubmit')}}" method="post" novalidate>
                         @csrf
                         <div class="mb-3">
                             <label for="txt_email" class="form-label">Email</label>
@@ -42,7 +42,7 @@
                     @endif
                     <div class="d-flex justify-content-end align-items-center ml-3">
                         <a href="{{ route('user.create') }}" class="btn btn-outline-secondary px-3 mx-1">Registrar</a>
-                        <a href="#" class="btn btn-outline-secondary px-3 mx-1">Esqueci minha senha</a>
+                        <a href="{{ route('forgot-password') }}" class="btn btn-outline-secondary px-3 mx-1">Esqueci minha senha</a>
                     </div>
                 </div>
 

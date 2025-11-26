@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('password')->nullable();
             $table->dateTime('last_login')->nullable();
+            $table->string('role', 50)->nullable();
+            $table->string('token');
+            $table->string('permissions',1000)->nullable();
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
