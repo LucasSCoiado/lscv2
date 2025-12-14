@@ -14,7 +14,11 @@ class User extends Model
     public $fillable = [
         'id',
         'email',
-        'password'
+    ];
+
+    protected $hidden = [
+        'password',
+        'token'
     ];
 
     public function notes()

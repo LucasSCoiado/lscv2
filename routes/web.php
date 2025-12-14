@@ -12,7 +12,14 @@ Route::middleware('guest')->group(function(): void{
     Route::get('/confirm-account/{token}', [ConfirmAccountController::class, 'confirmAccount'])->name('confirm-account');
     Route::get('/new_user_confirmation/{token}', [UserController::class, 'new_user_confirm'])->name('new_user_confirmation');
     Route::post('/confirm-account', [ConfirmAccountController::class, 'confirmAcountSubmit'])->name('confirm-account-submit');
+    
+    // forgot pass
     Route::get('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
+    Route::post('/forgot-password', [AuthController::class, 'sendRessetPasswordLink'])->name('send_restart_password_link');
+    
+    // reset pass
+    Route::get('/reset-password/{token}', [AuthController::class, 'reset_password'])->name('reset_password');
+    Route::post('/reset-password', [AuthController::class, 'reset_password_update'])->name('reset_password_update');
 });
 
 Route::middleware([UserNotLogged::class])->group(function(){
