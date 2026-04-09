@@ -1,4 +1,4 @@
-@extends('layout.main_layout')
+@extends('layout.layout-guest')
 @section('content')
     <div class="container mt-5">
         <div class="row">

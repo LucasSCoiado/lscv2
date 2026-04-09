@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 
 class UserLogged
 {
@@ -18,6 +19,15 @@ class UserLogged
         if(!session('user')){
             return redirect('/login');
         }
+
+        if (!Auth::check() && session('user')) {
+            $sess = session('user');
+            $userId = is_array($sess) && isset($sess['id']) ? $sess['id'] : $sess;
+            if ($userId) {
+                Auth::loginUsingId($userId);
+            }
+        }
+
         return $next($request);
     }
 }

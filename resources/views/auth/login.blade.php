@@ -1,32 +1,32 @@
-@extends('layout.main_layout')
+@extends('layout.layout-guest')
 @section('content')
 
-<div class="container mt-5">
+<div class="container ">
     <div class="row justify-content-center">
         <div class="col-md-6 col-sm-8">
                 <!-- logo -->
                 <div class="text-center p-3">
                     <img class="logo" src="img/emblema_médico.png" alt="Logo LSC" width="100px">
                 </div>
-            <div class="card p-5">
+            <div class="card p-3">
                 <!-- form -->
                 <div class="row justify-content-center">
                     <h2 class="text-center">Login</h2>
-                    <form action="{{route('loginSubmit')}}" method="post" novalidate>
+                    <form action="{{route('login')}}" method="post" >
                         @csrf
                         <div class="mb-3">
-                            <label for="txt_email" class="form-label">Email</label>
-                            <input value="{{ old('txt_email') }}" type="email" class="form-control text-info" name="txt_email">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" name="email" class="form-control" autocomplete="username" required>
                             {{-- show errors --}}
-                            @error('txt_email')
+                            @error('email')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="txt_password" class="form-label">Senha</label>
-                            <input type="password" class="form-control txt-info" name="txt_password">
+                            <label for="password" class="form-label">Senha</label>
+                            <input id="password" type="password" class="form-control txt-info" name="password">
                             {{-- show errors --}}
-                            @error('txt_password')
+                            @error('password')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
@@ -41,7 +41,7 @@
                         </div>
                     @endif
                     <div class="d-flex justify-content-end align-items-center ml-3">
-                        <a href="{{ route('user.create') }}" class="btn btn-outline-secondary px-3 mx-1">Registrar</a>
+                        {{-- <a href="{{ route('user.create') }}" class="btn btn-outline-secondary px-3 mx-1">Registrar</a> --}}
                         <a href="{{ route('forgot-password') }}" class="btn btn-outline-secondary px-3 mx-1">Esqueci minha senha</a>
                     </div>
                 </div>

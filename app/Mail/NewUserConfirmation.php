@@ -17,7 +17,7 @@ class NewUserConfirmation extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public $email, public $confirmation_link)
+    public function __construct(public $email, public $confirmation_link, public $password)
     {
         //
     }
@@ -28,8 +28,8 @@ class NewUserConfirmation extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('laravel@gmail.com', 'Laravel'),
-            subject: 'Confirmação de cadastro',
+            from: new Address(env('MAIL_FROM_ADDRESS', 'no-reply@example.com'), env('APP_NAME', 'App')),
+            subject: env('APP_NAME') . ' - Confirmação de cadastro',
         );
     }
 
@@ -39,7 +39,7 @@ class NewUserConfirmation extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'auth.new_user_confirmation',
+            view: 'mail.new_user_confirmation',
         );
     }
 

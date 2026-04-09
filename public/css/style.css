@@ -1,3 +1,8 @@
-.container-pai{
-    background-color: #93D4FA;
+.link-hover {
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.link-hover:hover {
+    transform: scale(1.15);
 }

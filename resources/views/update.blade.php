@@ -5,7 +5,6 @@
     <div class="row justify-content-center">
         <div class="col">
 
-            @include('top_bar')
             <!-- label and cancel -->
             <div class="row">
                 <div class="col">
@@ -49,7 +48,7 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col text-end">
-                        <a href="{{ route('home') }}" class="btn btn-secondary px-5"><i class="fa-solid fa-ban me-2"></i>Cancelar</a>
+                        <a href="{{ url()->previous() }}" class="btn btn-secondary px-5"><i class="fa-solid fa-ban me-2"></i>Cancelar</a>
                         <button type="submit" class="btn btn-primary px-5"><i class="fa-regular fa-circle-check me-2"></i>Atualizar</button>
                     </div>
                 </div>

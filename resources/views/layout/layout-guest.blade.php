@@ -11,18 +11,22 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="container-pai">
-    <div class="container">
-        <div class="row justify-content-center">  
-            
-            @include('layout.side-bar-guest')
-            
-            @yield('content')
+<body>
+    <div class="bg-light container-fluid px-5 d-flex flex-column min-vh-100">
+        <!-- TOP BAR FULL WIDTH -->
+        <header class="w-100 px-3">
+            @include('layout.top-bar')
+        </header>
 
-            <footer class="text-center text-secondary mt-3">
-                <small>LSC1&copy;<?=date('Y') ?> </small>
-            </footer>
-        </div>
+        <!-- CONTEÚDO -->
+        <main class="flex-fill container">
+            @yield('content')
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="text-center text-secondary py-3">
+            <small>LSC1 &copy; {{ date('Y') }}<i class="fa-brands fa-php"></i></small>
+        </footer>
     </div>
 </body>
 </html>

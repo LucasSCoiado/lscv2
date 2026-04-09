@@ -1,25 +1,20 @@
-@extends('layout.main_layout')
+@extends('layout.layout-guest')
 @section('content')
-<div class="container mt-5">
-    {{-- <h3>Confirmar conta</h3>
-    <form action="{{ route('confirm-account-submit') }}" method="post">
-        @csrf
-        <input type="hidden" name="token" value="{{ $user->token }}">
-        <p>Email: {{ $user->email }}</p>
-        <button type="submit" class="btn btn-primary">Confirmar conta</button>
-    </form> --}}
     <div class="container mt-5">
         <div class="row">
-            <div class="col text-center">
-                <div class="card p-5 text-center">
-                    <p class="display-6">A sua conta de usuário foi confirmada com sucesso.</p>
-                    <p class="display-6"><strong>Bem-vindo!<strong></p>
-                    <div class="mt-5">
-                        <a href="{{ route('home') }}" class="btn btn-secondary px-5">OK</a>
-                    </div>
+            <div class="col-md-6 offset-md-3">
+                <div class="card p-4">
+                    <h4 class="mb-3">Confirmar conta</h4>
+                    <p>Confirme a sua conta para ativar o acesso ao sistema.</p>
+                    <form method="POST" action="{{ route('confirm.account.submit') }}">
+                        @csrf
+                        <input type="hidden" name="token" value="{{ $user->token ?? '' }}">
+                        <div class="mb-3">
+                            <button class="btn btn-primary" type="submit">Confirmar minha conta</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
 @endsection

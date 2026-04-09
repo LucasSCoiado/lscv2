@@ -2,83 +2,156 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ConfirmAccountEmail;
-use App\Mail\NewUserConfirmation;
+use App\Mail\ConfirmPasswordChange;
+use App\Models\Crise;
+use App\Models\Medico;
+use App\Models\Paciente;
 use App\Models\User;
-use App\Services\UserService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    public function create()
+    public function index()
     {
-        return view('user.create');
+        //$paciente = Paciente::all();
+
+        $medico = Medico::where('user_id', Auth::user()->id)->first();
+        $meusPacientes = $medico ? $medico->pacientes : collect();
+        $user = auth()->user();
+        $crisesMes = Crise::where('user_id', $user->id)
+            ->whereMonth('data', now()->month)
+            ->whereYear('data', now()->year)
+            ->count();
+        return view('user.index', [
+            'user' => $user,
+            'isAdmin'   => $user->role === 'admin',
+            'isMedico'  => $user->role === 'medico',
+            'isPaciente' => $user->role === 'paciente',
+            'meusPacientes' => $meusPacientes,
+            'crisesMes' => $crisesMes
+        ]);
     }
 
-    public function store(Request $request)
+    public function alterarSenha($id)
+    {
+        $user = User::findOrFail($id);
+
+        return view('user.alterar-senha', compact('user'));
+    }
+
+    public function updatePassword(Request $request, $id)
     {
         $request->validate([
-                'email' => 'required|email|max:100',
-                'password' => 'required|min:6|max:20|confirmed',
-            ],
-            [
-                'txt_name.required' => 'O nome é obrigatório.',
-                'txt_name.min' => 'O nome deve ter pelo menos 3 caracteres.',
-                'txt_name.max' => 'O nome não pode ter mais de 50 caracteres.',
-                'txt_email.required' => 'O email é obrigatório.',
-                'txt_email.email' => 'O email deve ser um endereço de email válido.',
-                'txt_email.max' => 'O email não pode ter mais de 100 caracteres.',
-                'txt_password.required' => 'A senha é obrigatória.',
-                'txt_password.min' => 'A senha deve ter pelo menos 6 caracteres.',
-                'txt_password.max' => 'A senha não pode ter mais de 20 caracteres.',
-                'txt_password.confirmed' => 'As senhas não coincidem.',
-                'txt_password_confirmation.min' => 'A senha deve ter pelo menos 6 caracteres.',
-                'txt_password_confirmation.max' => 'A senha não pode ter mais de 20 caracteres.',
-                'txt_password_confirmation.confirmed' => 'As senhas não coincidem.',
-            ]
-        );
-        $user = new User();
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
-        $user->token = Str::random(60);
+            'antiga' => 'required|min:8|max:16',
+            'senha' => 'required|min:8|max:16|different:antiga',
+            'confirmar_senha' => 'required|same:senha'
+        ]);
 
-        // salva primeiro para garantir que o token exista no BD
-        $user->save();
+        $user = User::findOrFail($id);
 
-        // usa o token do usuário (não uma variável indefinida)
-        $token = $user->token;
-        $confirmation_link = route('new_user_confirmation', ['token' => $token]);
-
-        try {
-            Mail::to($user->email)->send(new NewUserConfirmation($user->email, $confirmation_link));
-        } catch (\Exception $e) {
-            // opcional: remover usuário salvo se falhar o envio
-            $user->delete();
-            return back()->withInput()->with([
-                'server_error' => 'Ocorreu um erro no envio do email de confirmação: ' . $e->getMessage()
-            ]);
+        if (!password_verify($request->antiga, $user->password)) {
+            return redirect()->back()->with('error', 'Senha atual está incorreta');
         }
 
-        return view('auth.email_sent', ['email' => $user->email]);
+        $user->password = bcrypt($request->senha);
+        $user->save();
+
+        try {
+            Mail::to($user->email)->send(new ConfirmPasswordChange($user->nome));
+        } catch (\Exception $e) {
+            Log::error(
+                "Erro ao enviar email de confirmação de senha",
+                [
+                    'erro' => $e->getMessage(),
+                    'usuario_id' => $user->id
+                ]
+            );
+        }
+
+        return redirect()->route('user.index')->with('success', 'Senha atualizada com sucesso! Verifique seu email para confirmação.');
     }
 
-    public function new_user_confirm($token)
+    public function confirmPass($token)
     {
         $user = User::where('token', $token)->first();
 
         if (!$user) {
-            return redirect()->route('login')->with([
-                'error' => 'Token inválido ou expirado.'
-            ]);
+            abort(403, 'Invalid confirmation acount');
         }
 
-        $user->is_confirmed = true;
+        return view('user.alterar-senha');
+    }
+
+    public function confirmPassSubmit(Request $request)
+    {
+        $request->validate([
+            'token' => 'required|size:60|string'
+        ]);
+
+        $user = User::where('token', $request->token)->first();
+
+        if (!$user) {
+            abort(403, 'Usuário invalido ou token expirado');
+        }
+
         $user->token = null;
+        $user->email_verified_at = now();
         $user->save();
 
-        return view('auth.new_user_confirmation');
+        return view('user');
+    }
+
+    public function editUser($id)
+    {
+        $user = User::findOrFail($id);
+        //dd($user);
+        return view('user.alterar-dados', compact('user'));
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        $request->validate([
+            'nome' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $id,
+            'imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->nome = $request->nome;
+        $user->email = $request->email;
+        if ($user->role == 'admin') {
+            $user->role = $request->role;
+            $user->permissions = $request->permissions;
+        }
+
+        $medico = Medico::where('user_id', $user->id)->first();
+        if ($medico) {
+            $medico->crm = $request->crm;
+            $medico->telefone = $request->telefone;
+            $medico->especialidade = $request->especialidade;
+            $medico->save();
+        }
+        $paciente = Paciente::where('user_id', $user->id)->first();
+        if ($paciente) {
+            $paciente->telefone = $request->telefone;
+            $paciente->save();
+        }
+        // $paciente = Paciente::where('user_id', $user->id)->first(); ATUALIZAR DADOS USUARIO PACIENTE
+        // if($paciente){
+
+        // }
+        if ($request->hasFile('imagem')) {
+            $file = $request->file('imagem');
+            $path = $file->store('perfil', 'public');
+            $user->foto = $path;
+        }
+
+        $user->save();
+
+        return redirect()->route('user.index')->with('success', 'Dados atualizados com sucesso!');
     }
 }
