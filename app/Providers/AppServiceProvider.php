@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,25 +20,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Gates
-        Gate::define('admin', function ($user) {
-            return $user->role === 'admin';
-        });
-
-        Gate::define('admin-or-medico', function ($user) {
-            return in_array($user->role, ['admin', 'medico']);
-        });
-
-        Gate::define('medico', function ($user) {
-            return $user->role === 'medico';
-        });
-
-        Gate::define('admin-or-mAdmin', function($user){
-            return $user->role === 'admin' || $user->permissions === 'mAdmin';
-        });
-
-        Gate::define('paciente', function ($user) {
-            return $user->role === 'paciente';
-        });
+        Vite::prefetch(concurrency: 3);
     }
 }

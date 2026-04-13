@@ -9,7 +9,7 @@
 
     <!-- TEXTO (desktop) -->
     <div class="col d-none d-lg-flex justify-content-center text-center">
-        A evolução de meu <span class="text-warning">TCC</span> criado em 2024 LSC1-V2!
+        A evolução de meu <span class="text-warning"> TCC </span> criado em 2024 LSC1-V2!
     </div>
     <hr>
 </div>

@@ -21,13 +21,13 @@ class AdminController extends Controller
 
     public function cadastrarPaciente()
     {
-        Auth::user()->can('admin-or-medico')?:abort(403, 'Não tem autorização para entrar nesta página!');
+        // Auth::user()->can('admin-or-medico')?:abort(403, 'Não tem autorização para entrar nesta página!');
         return view('admin.create_paciente');
     }
 
     public function storePaciente(Request $request)
     {
-        Auth::user()->can('admin-or-medico') ?: abort(403);
+        // Auth::user()->can('admin-or-medico') ?: abort(403);
 
         $request->validate([
             'nome' => 'required|string|max:255',
@@ -205,22 +205,23 @@ class AdminController extends Controller
     // médicos
     public function medicos()
     {
-        Auth::user()->can('admin-or-mAdmin')?:abort(403,'Você não tem autorização para acesso a esta pagina');
+        // Auth::user()->can('admin-or-mAdmin')?:abort(403,'Você não tem autorização para acesso a esta pagina');
 
         $medicos = Medico::all();
+        $user = Auth::user();
 
-        return view('user.medicos', compact('medicos'));
+        return view('user.medicos', compact('medicos', 'user'));
     }
 
     public function cadastrarMedico()
     {
-        Auth::user()->can('admin')?:abort(403, 'Não possui autorização de acesso a página');
+        // Auth::user()->can('admin')?:abort(403, 'Não possui autorização de acesso a página');
         return view('admin.creade_medico');
     }
 
     public function storeMedico(Request $request)
     {
-        Auth::user()->can('admin')?:abort(403);
+        // Auth::user()->can('admin')?:abort(403);
 
         $request->validate([
             'nome' => 'required|string|max:255',
@@ -272,7 +273,7 @@ class AdminController extends Controller
 
     public function editMedicos($id)
     {
-        Auth::user()->can('admin')?:abort(403,'Você não tem acesso a esta página');
+        // Auth::user()->can('admin')?:abort(403,'Você não tem acesso a esta página');
         $medico = Medico::findOrFail($id);
         //dd($medico);
         return view('admin.edit_medico', compact('medico'));
@@ -280,7 +281,7 @@ class AdminController extends Controller
 
     public function updateMedicos(Request $request, $id)
     {
-        abort_unless(Auth::user()->can('admin'), 403);
+        // abort_unless(Auth::user()->can('admin'), 403);
 
         $request->validate([
             'nome' => 'required|string|max:255',
@@ -309,7 +310,7 @@ class AdminController extends Controller
 
     public function deleteMedicos($id)
     {
-        Auth::user()->can('admin') ?: abort(403);
+        // Auth::user()->can('admin') ?: abort(403);
 
         $medico = Medico::findOrFail($id);
         $user = $medico->user; // 👈 relacionamento
@@ -319,7 +320,7 @@ class AdminController extends Controller
 
     public function destroyMedicos($id)
     {
-        Auth::user()->can('admin') ?: abort(403);
+        // Auth::user()->can('admin') ?: abort(403);
 
         $medico = Medico::findOrFail($id);
 

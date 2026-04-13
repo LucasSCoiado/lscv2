@@ -68,44 +68,51 @@
                     @if ($isAdmin)
                         <h3>Contratado em: {{ $user->created_at->format('d/m/Y') }}</h3>
                     @endif
-                    
+
                     <div class="card bg-white p-4 m-2">
-                        @can('paciente')
+                        @if($user->role === 'paciente')
                             <p><span class="fw-bold">Nome:</span> {{ $user->paciente->nome }}</p>
                             <p><span class="fw-bold">Idade:</span> {{ $user->paciente->idade }}</p>
                             <p><span class="fw-bold">Telefone:</span> {{ $user->paciente->telefone }}</p>
                             <p><span class="fw-bold">Sexo:</span> {{ $user->paciente->genero }}</p>
-                        @endcan
-                        @can('medico')
+                        @endif
+                        @if($user->role === 'medico')
                             <p><span class="fw-bold">Nome:</span> {{ $user->medico->nome }}</p>
                             <p><span class="fw-bold">CRM:</span> {{ $user->medico->crm }}</p>
                             <p><span class="fw-bold">Especialidade:</span> {{ $user->medico->especialidade }}</p>
                             <p><span class="fw-bold">Telefone:</span> {{ $user->medico->telefone }}</p>
-                        @endcan
+                        @endif
                         <p><span class="fw-bold">Email:</span> {{ $user->email }}</p>
                         <div class="text-start m-2">
-                            <a href="{{ route('user.alter-senha', ['id' => $user->id]) }}" class="btn btn-primary px-2">
+                            <a href="{{ route('user.alter-senha', ['id' => $user->id]) }}" class="btn btn-primary px-2 mb-2">
                                 Alterar senha
                             </a>
-                            <a href="{{ route('user.edit-user', ['id' => $user->id]) }}" class="btn btn-primary px-2">
+                            <a href="{{ route('user.edit-user', ['id' => $user->id]) }}" class="btn btn-primary px-2 mb-2">
                                 Alterar dados
                             </a>
                         </div>
                     </div>
-                    @can('medico')
+                    @if($user->role === 'medico')
                         <div class="card bg-white p-4 m-2">
                             <h3>Pacientes</h3>
                             @foreach ($meusPacientes as $mp)
                                 <p>{{ $mp->nome }}</p>
                             @endforeach
                         </div>
-                    @endcan
-                    @can('paciente')
+                    @elseif($user->role === 'paciente')
+                        <div class="card bg-white p-4 m-2">
+                            <h3>Médicos</h3>
+                            @foreach ($meusMedicos as $mm)
+                                <p>{{ $mm->nome }}</p>
+                            @endforeach
+                        </div>
+                    @endif
+                    @if($user->role === 'paciente')
                         <div class="card bg-white p-4 m-2">
                             <h3>Crises no mês</h3>
                             <h5 class="text-center">{{ $crisesMes }}</h5>
                         </div>
-                    @endcan
+                    @endif
                 </div>
             </div>
         </div>
