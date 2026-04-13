@@ -3,23 +3,24 @@
     <div class="w-100 p-4">
         <h3>Pacientes</h3>
         <hr>
-        @can('admin')
+        @if($user->role === 'admin')
             <div class="d-flex justify-content-end mb-3">
                 @if ($pacientes->count() > 0)
-                    <a href="{{ route('admin.cadastrar_paciente') }}" class="btn btn-secondary btn-sm p-2"><i
-                            class="fa-solid fa-plus"></i> Novo paciente</a>
+                    <a href="{{ route('admin.cadastrar_paciente') }}" class="btn btn-secondary btn-sm p-2">
+                        <i class="fa-solid fa-plus"></i> Novo paciente
+                    </a>
                 @endif
             </div>
-        @endcan
+        @endif
         @if ($pacientes->count() == 0)
-            @can('admin')
+            @if($user->role === 'admin')
                 <div class="text-center my-5">
                     <p>Sem pacientes cadastrados</p>
-                    <a href="{{ route('admin.cadastrar_paciente') }}" class="btn btn-primary"><i class="fa-solid fa-plus"></i> 
+                    <a href="{{ route('admin.cadastrar_paciente') }}" class="btn btn-primary"><i class="fa-solid fa-plus"></i>
                         Novo paciente
                     </a>
                 </div>
-            @endcan
+            @endif
         @else
             <div class="table-responsive">
                 <table class="table table-striped align-middle" id="table">
@@ -34,7 +35,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @can('admin')
+                        @if($user->role === 'admin')
                             @foreach($pacientes as $paciente)
                                 <tr>
                                     <td>
@@ -70,8 +71,8 @@
                                 </tr>
 
                             @endforeach
-                        @endcan
-                        @can('medico')
+                        @endif
+                        @if($user->role === 'medico')
                             @foreach($meusPacientes as $paciente)
                                 <tr>
                                     <td>
@@ -99,14 +100,14 @@
                                     </td>
 
                                     <td class="d-none d-md-table-cell">
-                                        <a href="{{ route('dados.paciente', ['id' => $paciente->id]) }}" class="btn btn-sm btn-primary"><i
-                                                class="fa-solid fa-eye"></i> 
+                                        <a href="{{ route('dados.paciente', ['id' => $paciente->id]) }}"
+                                            class="btn btn-sm btn-primary"><i class="fa-solid fa-eye"></i>
                                         </a>
                                     </td>
                                 </tr>
 
                             @endforeach
-                        @endcan
+                        @endif
                     </tbody>
                 </table>
             </div>

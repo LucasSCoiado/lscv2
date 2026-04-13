@@ -26,7 +26,7 @@
                             </div>
                         @enderror
                     </div>
-                    @can('admin')
+                    @if($user->role ==='admin')
                         <div class="mb-3">
                             <label for="role" class="form-label">Função</label>
                             <input type="text" name="role" id="role" class="form-control" value="{{ $user->role }}">
@@ -36,8 +36,8 @@
                                 </div>
                             @enderror
                         </div>
-                    @endcan
-                    @can('medico')
+                    @endif
+                    @if($user->role === 'medico')
                         <div class="mb-3">
                             <label for="crm" class="form-label">CRM</label>
                             <input type="text" name="crm" id="crm" class="form-control" value="{{ $user->medico->crm ?? '' }}">
@@ -47,8 +47,8 @@
                                 </div>
                             @enderror
                         </div>
-                    @endcan
-                    @can('medico')
+                    @endif
+                    @if($user->role === 'medico')
                         <div class="mb-3">
                             <label for="telefone" class="form-label">Telefone</label>
                             <input type="text" name="telefone" id="telefone" class="form-control" value="{{ $user->medico->telefone ?? '' }}">
@@ -58,8 +58,8 @@
                                 </div>
                             @enderror
                         </div>
-                    @endcan
-                    @can('paciente')
+                    @endif
+                    @if($user->role ==='paciente')
                         <div class="mb-3">
                             <label for="telefone" class="form-label">Telefone</label>
                             <input type="text" name="telefone" id="telefone" class="form-control" value="{{ $user->paciente->telefone ?? '' }}">
@@ -69,8 +69,8 @@
                                 </div>
                             @enderror
                         </div>
-                    @endcan
-                    @can('medico')
+                    @endif
+                    @if($user->role === 'medico')
                         <div class="mb-3">
                             <label for="especialidade" class="form-label">Especialidade</label>
                             <input type="text" name="especialidade" id="especialidade" class="form-control" value="{{ $user->medico->especialidade ?? '' }}">
@@ -80,9 +80,9 @@
                                 </div>
                             @enderror
                         </div>
-                    @endcan
+                    @endif
 
-                    @can('admin')
+                    @if($user->role === 'admin')
                         <div class="mb-3">
                             <label for="permisions" class="form-label">Permissões</label>
                             <input type="text" name="permisions" id="permisions" class="form-control" value="{{ $user->permissions }}">
@@ -92,7 +92,7 @@
                                 </div>
                             @enderror
                         </div>
-                    @endcan
+                    @endif
                     <div class="form-group">
                         <label for="imagem">Foto de perfil</label>
                         <input type="file" id="imagem" name="imagem" class="form-control-file" value="{{ $user->foto }}">

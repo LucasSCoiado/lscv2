@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Crise;
 use App\Models\Medico;
 use App\Models\Paciente;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\User;
@@ -76,10 +77,10 @@ class MainController extends Controller
 
     public function showPaciente($id)
     {
-        Auth::user()->can('admin-or-medico') ?: abort(403);
+        // Auth::user()->can('admin-or-medico') ?: abort(403);
 
         $paciente = Paciente::findOrFail($id);
-
+        $admin = Admin::all();
         $medico = Medico::all();
         $medico_paciente = $medico->where('paciente_id', $paciente->id)->first();
 
@@ -106,7 +107,8 @@ class MainController extends Controller
             'medico_paciente',
             'crisesPorMes',
             'ano',
-            'crisesPorDia'
+            'crisesPorDia',
+            'admin'
         ));
     }
 
@@ -118,14 +120,16 @@ class MainController extends Controller
 
     public function pacientes()
     {
-        Auth::user()->can('admin-or-medico') ?: abort(403, 'Você não tem autorização para acesso a esta pagina');
+        // Auth::user()->can('medico') ?: abort(403, 'Você não tem autorização para acesso a esta pagina');
 
         $pacientes = Paciente::all();
 
+        $user = Auth::user();
+
         $meusPacientes = $pacientes;
 
-        if (Auth::user()->role === "medico") {
-            $medico = Medico::where('user_id', Auth::user()->id)->first();
+        if ($user->role === "medico") {
+            $medico = Medico::where('user_id', $user->id)->first();
             $meusPacientes = $medico ? $medico->pacientes : collect();
         }
 
@@ -135,41 +139,8 @@ class MainController extends Controller
         // preparar array id => crises_count para a view
         $crises = $pacientes->pluck('crises_count', 'id')->toArray();
 
-        return view('user.pacientes', compact('pacientes', 'crises', 'meusPacientes'));
+        return view('user.pacientes', compact('pacientes', 'crises', 'meusPacientes', 'user'));
     }
-
-    // public function store(Request $request)
-    // {
-    //     $this->validate($request);
-
-    //     CrisesService::store($request, Auth::id());
-
-    //     return redirect()->route('home');
-    // }
-
-    // public function edit($id)
-    // {
-    //     $id = Operations::decrypt($id);
-
-    //     if ($id === null) {
-    //         return redirect()->route('home');
-    //     }
-
-    //     $crise = Crise::FindOrFail($id);
-
-    //     return view('update', [
-    //         'crise' => $crise,
-    //     ]);
-    // }
-
-    // public function update(Request $request)
-    // {
-    //     $this->validate($request);
-
-    //     CrisesService::update($request);
-
-    //     return redirect()->route('home');
-    // }
 
     public function delete($id)
     {
@@ -209,31 +180,10 @@ class MainController extends Controller
 
     public function allPacientes()
     {
-        Auth::user()->can('admin-or-mAdmin') ?: abort(403, 'Você não tem autorização para acesso a esta pagina');
+        // Auth::user()->can('admin-or-mAdmin') ?: abort(403, 'Você não tem autorização para acesso a esta pagina');
 
         $pacientes = Paciente::with('medicos.user')->get();
         return view('pacientes', compact('pacientes'));
     }
 
-    private function validate(Request $request)
-    {
-        $request->validate(
-            [
-                'txt_tipo' => 'required|min:3|max:255',
-                'txt_data' => 'required|date',
-                'txt_tempo' => 'required|min:3|max:255',
-            ],
-            [
-                'txt_tipo.required' => 'O tipo é obrigatorio',
-                'txt_tipo.min' => 'O tipo deve ter no mínimo :min caractéres',
-                'txt_tipo.max' => 'O tipo deve ter no máximo :max caractéres',
-
-                'txt_data.required' => 'A data é obrigatoria',
-
-                'txt_tempo.required' => 'O tempo é obrigatório',
-                'txt_tempo.min' => 'O tempo deve ter no mínimo :min caractéres',
-                'txt_tempo.max' => 'O tempo deve ter no máximo :max caractéres'
-            ]
-        );
-    }
 }

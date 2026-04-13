@@ -22,14 +22,14 @@
                     <li><strong>Telefone:</strong> {{ $paciente->telefone }}</li>
                     <li><strong>Gmail:</strong> {{ $paciente->user->email }}</li>
 
-                    @can('admin-or-mAdmin')
+                    @if(!$admin->isEmpty())
                         @if ($medico_paciente)
                             <li><strong>Médico responsável:</strong> {{ $medico_paciente->nome }}</li>
                         @else
                             <li><strong>Médico responsável:</strong> Não definido</li>
                         @endif
 
-                    @endcan
+                    @endif
                 </ul>
             </div>
 
